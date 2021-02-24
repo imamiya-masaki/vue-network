@@ -2,11 +2,12 @@
   <div class="ReadFile">
     <b-form-file v-model="file" class="mt-3" @input="readFile" multiple directory plain></b-form-file>
     <div class="mt-3">Selected file: {{ file ? file.name : '' }}</div>
-    <button @click="readFile()">確認</button>
+    <button @click="testWorker()">確認</button>
   </div>
 </template>
 
 <script>
+import Worker from '@/worker/file.worker.js'
 export default {
   name: 'ReadFile',
   props: {
@@ -25,9 +26,20 @@ export default {
         output.push(item.text())
       }
       console.log('output', output)
-      return Promise.all(output).then(ss =>
-        console.log('promises', ss)
-      )
+      return Promise.all(output)
+        .then(ss =>
+          console.log('promises', ss)
+        )
+    },
+    testWorker: function () {
+      const worker = new Worker()
+      worker.onmessage = e => {
+        // 設定?
+        const { data } = e
+        console.log('data', data)
+        worker.terminate()
+      }
+      worker.postMessage(100)
     }
   }
 }
