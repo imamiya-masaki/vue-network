@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import Worker from '@/worker/file.worker.js'
+import Worker1 from 'worker-loader!../workers/worker1'
 export default {
   name: 'ReadFile',
   props: {
@@ -32,7 +32,7 @@ export default {
         )
     },
     testWorker: function () {
-      const worker = new Worker()
+      const worker = new Worker1()
       worker.onmessage = e => {
         // 設定?
         const { data } = e

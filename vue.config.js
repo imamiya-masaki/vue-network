@@ -1,12 +1,13 @@
 module.exports = {
-    configureWebpack: {
-        module: {
-          rules: [
-            {
-              test: /\.worker\.js$/,
-              use: { loader: 'worker-loader' }
-            }
-          ]
-        }
+    chainWebpack: config => {
+      config.module
+        .rule("worker-loader")
+        .test(/\.worker\.js$/)
+        .use({loader: 'worker-loader', options: {
+            inline: true
+          }})
+        .loader("worker-loader")
+        .end();
+    }
   }
-}
+  
