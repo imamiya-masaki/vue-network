@@ -9,7 +9,7 @@ addEventListener('message', e => {
   // console.log('templates', templates)
   if (templates) {
     if (templates.length > 0) {
-      postMessage(parseFunc(templates))
+      postMessage(preNetwork(templates))
     } else {
       postMessage('')
     }
@@ -17,4 +17,10 @@ addEventListener('message', e => {
     postMessage('')
   }
 })
+
+const preNetwork = function (templates) {
+  const parsed = parseFunc(templates)
+  return parsed
+}
+
 export default {}
