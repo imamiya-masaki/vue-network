@@ -3,12 +3,11 @@
     <b-form-file v-if="!reader" v-model="file" class="mt-3" @input="readFile" multiple directory plain></b-form-file>
     <div class="mt-3">Selected file: {{ file ? file.name : '' }}</div>
     <button @click="readFile()">確認</button>
-    {{ output }}
   </div>
 </template>
 
 <script>
-import Worker1 from 'worker-loader!../workers/worker1'
+import FileParseWorker from 'worker-loader!@/workers/FileParseWorker'
 export default {
   name: 'ReadFile',
   props: {
@@ -36,7 +35,7 @@ export default {
           this.reader = true
           // console.log('ss', items)
           for (let itemIndex in items) {
-            const worker = new Worker1()
+            const worker = new FileParseWorker()
             worker.onmessage = e => {
               // 設定?
               const { data } = e
@@ -54,7 +53,7 @@ export default {
         )
     },
     testWorker: function () {
-      const worker = new Worker1()
+      const worker = new FileParseWorker()
       worker.onmessage = e => {
         // 設定?
         const { data } = e
