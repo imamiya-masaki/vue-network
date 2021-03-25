@@ -92,5 +92,6 @@ a {
   color: #42b983;
 }
 .ReadFile {
+  text-align: left;
 }
 </style>
