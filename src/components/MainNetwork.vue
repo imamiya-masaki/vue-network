@@ -4,7 +4,7 @@
 </template>
 
 <script>
-import cytoscape from 'cytoscape';
+import cytoscape from 'cytoscape'
 
 export default {
   name: 'ReadFile',
@@ -29,5 +29,7 @@ export default {
 <style scoped>
  .MainNetwork {
   border: 0.5px solid;
+  width: 700px;
+  height: 500px;
  }
 </style>

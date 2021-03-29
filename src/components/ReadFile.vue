@@ -17,19 +17,40 @@ export default {
       file: null,
       reader: false,
       output: [],
+      outputObject: {},
       count: 0,
       counter: 0
     }
   },
   methods: {
+    checkVueFile: function (file) {
+      const fileNameSpl = file.name.split('.')
+      if (fileNameSpl.length <= 1 || fileNameSpl[fileNameSpl.length - 1] !== 'vue') {
+        return false
+      } else {
+        return true
+      }
+    },
+    async extractVue (file) {
+      // vueファイルを取り出す
+      // vueファイルはtypeで識別できないので、nameの末尾で判定する
+      const fileNameSpl = file.name.split('.')
+      const output = { text: await file.text(), name: fileNameSpl.slice(0, fileNameSpl.length - 1).join('.') }
+      console.log('output', output, fileNameSpl)
+      return output
+    },
     readFile: function () {
       const files = this.file
       let output = []
       this.output = []
       for (let item of files) {
-        output.push(item.text())
+        if (this.checkVueFile(item)) {
+          const res = this.extractVue(item)
+          output.push(res)
+        }
       }
-      this.count = files.length
+      console.log('fileCheck', files, output)
+      this.count = output.length
       return Promise.all(output)
         .then(items => {
           this.reader = true
@@ -40,7 +61,8 @@ export default {
               // 設定?
               const { data } = e
               if (typeof data !== 'string' && data.length !== 0) {
-                this.output.push(data)
+                this.output.push(data.data)
+                this.outputObject[data.name] = data.data
               }
               this.counter++
               worker.terminate()
@@ -67,7 +89,7 @@ export default {
     counter () {
       if (this.counter === this.count) {
         this.reader = false
-        console.log('reloaded', this.output)
+        console.log('reloaded', this.output, this.outputObject)
         this.$emit('reloaded', this.output)
       }
     }
