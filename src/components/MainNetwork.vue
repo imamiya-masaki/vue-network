@@ -44,7 +44,7 @@ export default {
           const edge = { data: {} }
           edge.data.source = src
           edge.data.target = target
-          edge.data.relationship = value
+          edge.data.count = value
           edges.push(edge)
         }
       }
@@ -101,7 +101,8 @@ export default {
               'target-arrow-shape': 'triangle',
               'line-color': '#ffaaaa',
               'target-arrow-color': '#ffaaaa',
-              'curve-style': 'bezier'
+              'curve-style': 'bezier',
+              'content': 'data(count)'
             }),
           elements: this.cytoscapeData,
           layout: {
@@ -148,6 +149,5 @@ export default {
   height: 500px;
  }
  #cy {
-  position: absolute;
  }
 </style>

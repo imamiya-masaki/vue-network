@@ -2,8 +2,6 @@
   <div class="network">
     <read-file @load="extractReadFile"/>
     <main-network class="main-network__position" :loadData="readFileData"/>
-  <div id="cy">
-  </div>
   </div>
 </template>
 
@@ -37,6 +35,5 @@ export default {
   margin-right: auto;
 }
 .network {
-  position: absolute;
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div class="ReadFile">
-    <b-form-file v-if="!reader" v-model="file" class="mt-3" @input="readFile" multiple directory plain></b-form-file>
-    <div class="mt-3">Selected file: {{ file ? file.name : '' }}</div>
+    <b-form-file v-if="!reader" v-model="files" class="mt-3" @input="readFile" multiple directory plain></b-form-file>
+    <div class="mt-3">ファイル数: {{ files ? files.length : 0 }}</div>
     <button @click="readFile()">確認</button>
   </div>
 </template>
@@ -14,7 +14,7 @@ export default {
   },
   data () {
     return {
-      file: null,
+      files: null,
       reader: false,
       output: [],
       outputObject: {},
@@ -40,7 +40,7 @@ export default {
       return output
     },
     readFile: function () {
-      const files = this.file
+      const files = this.files
       let output = []
       this.output = []
       this.counter = 0
