@@ -43,6 +43,8 @@ export default {
       const files = this.file
       let output = []
       this.output = []
+      this.counter = 0
+      this.outputObject = {}
       for (let item of files) {
         if (this.checkVueFile(item)) {
           const res = this.extractVue(item)

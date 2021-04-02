@@ -19,7 +19,8 @@ export default {
   data () {
     return {
       fileUpperCamelCase: true, // 後々ここフラグによって変化させたいので
-      readFileOnly: false // 読み込んだファイルのみをネットワーク表示させる
+      readFileOnly: false, // 読み込んだファイルのみをネットワーク表示させる
+      cytoscapeData: {}
     }
   },
   methods: {
@@ -71,6 +72,47 @@ export default {
       output.edges = preEdges.edges
       output.nodes = this.shapeNodes(Object.keys(preEdges.vertexs), vertexInfos)
       return output
+    },
+    setNetwork: function () {
+      this.cy = cytoscape(
+        {
+          container: document.getElementById('cy'),
+          // boxSelectionEnabled: false,
+          // autounselectify: false,
+          style: cytoscape.stylesheet()
+            .selector('core')
+            .css({
+              'width': 100
+            })
+            .selector('node')
+            .css({
+              'height': 80,
+              'width': 80,
+              'background-fit': 'cover',
+              'border-color': '#000',
+              'border-width': 3,
+              'border-opacity': 0.5,
+              'content': 'data(name)',
+              'text-valign': 'center'
+            })
+            .selector('edge')
+            .css({
+              'width': 6,
+              'target-arrow-shape': 'triangle',
+              'line-color': '#ffaaaa',
+              'target-arrow-color': '#ffaaaa',
+              'curve-style': 'bezier'
+            }),
+          elements: this.cytoscapeData,
+          layout: {
+            left: 0,
+            name: 'breadthfirst'
+          }
+        }
+      )
+      // なぜか画面が半分になってしまうので致し方ない処理...
+      const canvas = document.querySelector('canvas[data-id="layer2-node"]')
+      canvas.style.position = 'relative'
     }
   },
   computed: {
@@ -89,7 +131,10 @@ export default {
     },
     loadData () {
       const data = this.shapeDatas(this.loadData)
-      console.log('shapeData', data)
+      this.cytoscapeData = data
+      console.log('cytoscapeData', data)
+      this.cy = {}
+      this.setNetwork()
     }
   }
 }
@@ -99,7 +144,10 @@ export default {
 <style scoped>
  .MainNetwork {
   border: 0.5px solid;
-  width: 700px;
+  width: 1000px;
   height: 500px;
+ }
+ #cy {
+  position: absolute;
  }
 </style>

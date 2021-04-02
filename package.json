@@ -13,6 +13,7 @@
     "cytoscape": "^3.18.1",
     "vue": "^2.6.11",
     "vue-ast": "^0.0.2",
+    "vue-cytoscape": "^1.0.8",
     "vue-router": "^3.2.0",
     "vuex": "^3.4.0",
     "worker": "^0.4.0",
@@ -59,7 +60,8 @@
       "prefer-const": "off",
       "import/no-webpack-loader-syntax": "off",
       "no-unused-vars": "warn",
-      "no-prototype-builtins": "off"
+      "no-prototype-builtins": "off",
+      "quote-props": "off"
     }
   },
   "browserslist": [
