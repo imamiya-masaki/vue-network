@@ -1,7 +1,10 @@
 import parseFunc from 'vue-ast'
-import { parseCase, lowerToUpperCamel } from '@/utility/common.js'
+import { parseCase } from '@/utility/common.js'
 addEventListener('message', e => {
-  const { data } = e
+  const res = e.data
+  // console.log('res', res)
+  const data = res.text
+  const name = res.name
   const templateLength = '<template>'.length
   let templates = ''
   if (data) {
@@ -10,12 +13,12 @@ addEventListener('message', e => {
   // console.log('templates', templates)
   if (templates) {
     if (templates.length > 0) {
-      postMessage(preNetwork(templates))
+      postMessage({ data: preNetwork(templates), name: name })
     } else {
-      postMessage('')
+      postMessage({ data: {}, name: name })
     }
   } else {
-    postMessage('')
+    postMessage({ data: {}, name: name })
   }
 })
 
