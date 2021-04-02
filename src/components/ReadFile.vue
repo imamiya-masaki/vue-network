@@ -90,7 +90,7 @@ export default {
       if (this.counter === this.count) {
         this.reader = false
         console.log('reloaded', this.output, this.outputObject)
-        this.$emit('reloaded', this.output)
+        this.$emit('load', this.outputObject)
       }
     }
   }

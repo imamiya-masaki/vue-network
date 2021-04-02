@@ -1,5 +1,5 @@
 import parseFunc from 'vue-ast'
-import { parseCase, lowerToUpperCamel } from '@/utility/common.js'
+import { parseCase } from '@/utility/common.js'
 addEventListener('message', e => {
   const res = e.data
   // console.log('res', res)

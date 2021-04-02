@@ -1,7 +1,7 @@
 <template>
   <div class="network">
-    <ReadFile/>
-    <main-network class="main-network__position"/>
+    <read-file @load="extractReadFile"/>
+    <main-network class="main-network__position" :loadData="readFileData"/>
   </div>
 </template>
 
@@ -14,6 +14,17 @@ export default {
   components: {
     ReadFile,
     MainNetwork
+  },
+  data: function () {
+    return {
+      readFileData: {}
+    }
+  },
+  methods: {
+    extractReadFile: function (data) {
+      this.readFileData = data
+      console.log('extract', data)
+    }
   }
 }
 </script>
