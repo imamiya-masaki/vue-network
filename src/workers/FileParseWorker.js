@@ -20,7 +20,7 @@ addEventListener('message', e => {
   // console.log('templates', templates)
   if (templates) {
     if (templates.length > 0) {
-      postMessage({ data: preNetwork(templates, script), name: name })
+      postMessage({ data: preNetwork(templates, script, name), name: name })
     } else {
       postMessage({ data: {}, name: name })
     }
@@ -29,20 +29,20 @@ addEventListener('message', e => {
   }
 })
 
-const preNetwork = function (templates, script, userOption, option = { chain: true }, lessDomName = [], onlyDomName = []) {
+const preNetwork = function (templates, script, name = '', userOption, option = { chain: true }, lessDomName = [], onlyDomName = []) {
   // userOptionにより、userが容易にoption,less,onlyの追加ができる
-  moduleLocalComponent(script)
+  moduleLocalComponent(script, name)
   const parsed = astParseNetworkData(parseFunc(templates), option, lessDomName, onlyDomName)
   return parsed
 }
 
-const moduleLocalComponent = function (script) {
+const moduleLocalComponent = function (script, name) {
   // モジュールシステム内のローカル登録
   // importを見る -> 実際に登録されるまで監視する
   const { parse } = require('@babel/parser')
   console.log('script', script)
   const ast = parse(script, { sourceType: 'module' })
-  console.log('ast', ast)
+  console.log('ast', name, ast)
 }
 
 const funcImportDeclaration = function (ImportDeclaration) {
@@ -80,6 +80,19 @@ const funcExporttDeclaration = function (ExportDeclaration) {
             if (property.value.type === 'ObjectExpression' && property.value.properties) {
               for (let componentProperty of property.value.properties) {
                 if (componentProperty.type === 'ObjectProperty') {
+                  if (componentProperty.hasOwnProperty('key') && componentProperty.hasOwnProperty('value')) {
+                    // keyを[key]のように、追加できると思うが、
+                    // とりあえず、変数ではなく、文字列のみで処理するようにする <- いずれ改修して変数も対応できるようにしようかな...?
+                    let reserveKey = ''
+                    let reserveValue = ''
+                    if (componentProperty.key.type === 'Identifier') {
+                      reserveKey = componentProperty.key.name
+                    }
+                    if (componentProperty.value.type === 'Identifier') {
+                      reserveValue = componentProperty.value.name
+                    }
+                    registComponents[reserveKey] = reserveValue
+                  }
                 }
               }
             }
