@@ -67,7 +67,7 @@ export default {
                 this.outputObject[data.name] = data.data
               }
               this.counter++
-              worker.terminate()
+              // worker.terminate()
             }
             if (items[itemIndex]) {
               worker.postMessage(items[itemIndex])

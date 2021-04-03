@@ -6,14 +6,21 @@ addEventListener('message', e => {
   const data = res.text
   const name = res.name
   const templateLength = '<template>'.length
+  const scriptLength = '<script>'.length
   let templates = ''
+  let script = ''
   if (data) {
-    templates = data.substr(data.indexOf('<template>') + templateLength, data.indexOf('</template>') - templateLength)
+    const templateStart = data.indexOf('<template>') + templateLength
+    const templateEnd = data.indexOf('</template>') - templateStart
+    const scriptStart = data.indexOf('<script>') + scriptLength
+    const scriptEnd = data.indexOf('</script>') - scriptStart
+    templates = data.substr(templateStart, templateEnd)
+    script = data.substr(scriptStart, scriptEnd)
   }
   // console.log('templates', templates)
   if (templates) {
     if (templates.length > 0) {
-      postMessage({ data: preNetwork(templates), name: name })
+      postMessage({ data: preNetwork(templates, script), name: name })
     } else {
       postMessage({ data: {}, name: name })
     }
@@ -22,10 +29,20 @@ addEventListener('message', e => {
   }
 })
 
-const preNetwork = function (templates, userOption, option = { chain: true }, lessDomName = [], onlyDomName = []) {
+const preNetwork = function (templates, script, userOption, option = { chain: true }, lessDomName = [], onlyDomName = []) {
   // userOptionにより、userが容易にoption,less,onlyの追加ができる
+  moduleLocalComponent(script)
   const parsed = astParseNetworkData(parseFunc(templates), option, lessDomName, onlyDomName)
   return parsed
+}
+
+const moduleLocalComponent = function (script) {
+  // モジュールシステム内のローカル登録
+  // importを見る -> 実際に登録されるまで監視する
+  const { parse } = require('@babel/parser')
+  console.log('script', script)
+  const ast = parse(script, { sourceType: 'module' })
+  console.log('ast', ast)
 }
 
 const astParseNetworkData = function (domAST, option, lessDomName, onlyDomName) {
