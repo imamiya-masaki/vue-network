@@ -12,7 +12,8 @@ import { test, test2 } from '@/components/test.vue'
 export default {
   name: 'Home',
   components: {
-    HelloWorld
+    HelloWorld,
+    [Test]: test
   }
 }
 </script>

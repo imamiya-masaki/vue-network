@@ -58,6 +58,33 @@ const funcImportDeclaration = function (ImportDeclaration) {
       if (specify.type === 'ImportDefaultSpecifier' || specify.type === 'ImportSpecifier') {
         // とりあえず、defaultと名前指定の両方を、specifiersに追加する
         // 後々defaultと名前指定で処理変更しても良いかも
+        if (specify.local.type === 'Identifier') {
+          specifiers.push(specify.local.name)
+        }
+      }
+    }
+  }
+  console.log('funcImportDeclaration', sourceText, specifiers)
+  return { source: sourceText, specifiers: specifiers }
+}
+
+const funcExporttDeclaration = function (ExportDeclaration) {
+  // exportの中身
+  // ここからcomponents
+  let registComponents = {} // keyで登録された名前 valueでimportを参照するための名前
+  if (ExportDeclaration.type === 'ObjectExpression' && ExportDeclaration.hasOwnProperty('properties')) {
+    for (let property of ExportDeclaration.properties) {
+      if (property.type === 'ObjectProperty' && property.hasOwnProperty('key') && property.hasOwnProperty('value')) {
+        switch (property.key.name) {
+          case 'components':
+            if (property.value.type === 'ObjectExpression' && property.value.properties) {
+              for (let componentProperty of property.value.properties) {
+                if (componentProperty.type === 'ObjectProperty') {
+                }
+              }
+            }
+            break
+        }
       }
     }
   }
