@@ -45,6 +45,24 @@ const moduleLocalComponent = function (script) {
   console.log('ast', ast)
 }
 
+const funcImportDeclaration = function (ImportDeclaration) {
+  // ImportDeclaration
+  let sourceText = ''
+  if (ImportDeclaration.hasOwnProperty('source') && ImportDeclaration.source) {
+    // ここも絶対参照しかうけとれないし、srcを基準とした相対 -> 絶対にするようにしないと...
+    sourceText = ImportDeclaration.source.value || ''
+  }
+  let specifiers = []
+  if (ImportDeclaration.hasOwnProperty('specifiers')) {
+    for (let specify of ImportDeclaration.specifiers) {
+      if (specify.type === 'ImportDefaultSpecifier' || specify.type === 'ImportSpecifier') {
+        // とりあえず、defaultと名前指定の両方を、specifiersに追加する
+        // 後々defaultと名前指定で処理変更しても良いかも
+      }
+    }
+  }
+}
+
 const astParseNetworkData = function (domAST, option, lessDomName, onlyDomName) {
   let lessDomObject = {}
   let onlyDomObject = {}
