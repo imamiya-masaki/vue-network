@@ -35,7 +35,8 @@ export default {
       // vueファイルを取り出す
       // vueファイルはtypeで識別できないので、nameの末尾で判定する
       const fileNameSpl = file.name.split('.')
-      const output = { text: await file.text(), name: fileNameSpl.slice(0, fileNameSpl.length - 1).join('.') }
+      const IntermediatePath = file.$path.split('/').slice(1, file.$path.split('/').length - 1)
+      const output = { text: await file.text(), name: fileNameSpl.slice(0, fileNameSpl.length - 1).join('.'), path: IntermediatePath }
       console.log('output', output, fileNameSpl)
       return output
     },

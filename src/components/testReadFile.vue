@@ -8,7 +8,7 @@
 <script>
 // @ is an alias to /src
 import HelloWorld from '@/components/HelloWorld.vue'
-import { test, test2 } from '@/components/test.vue'
+import { test, test2 } from '../test.vue'
 const Test = 'dada'
 export default {
   name: 'Home',
