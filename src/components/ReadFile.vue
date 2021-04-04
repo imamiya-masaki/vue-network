@@ -18,6 +18,7 @@ export default {
       reader: false,
       output: [],
       outputObject: {},
+      pathToNameObject: {},
       count: 0,
       counter: 0
     }
@@ -35,7 +36,8 @@ export default {
       // vueファイルを取り出す
       // vueファイルはtypeで識別できないので、nameの末尾で判定する
       const fileNameSpl = file.name.split('.')
-      const output = { text: await file.text(), name: fileNameSpl.slice(0, fileNameSpl.length - 1).join('.') }
+      const IntermediatePath = file.$path.split('/').slice(1, file.$path.split('/').length - 1)
+      const output = { text: await file.text(), name: fileNameSpl.slice(0, fileNameSpl.length - 1).join('.'), path: IntermediatePath }
       console.log('output', output, fileNameSpl)
       return output
     },
@@ -63,11 +65,12 @@ export default {
               // 設定?
               const { data } = e
               if (typeof data !== 'string' && data.length !== 0) {
-                this.output.push(data.data)
-                this.outputObject[data.name] = data.data
+                this.output.push(data.path)
+                this.outputObject[data.path] = data.data
+                this.pathToNameObject[data.path] = data.name
               }
               this.counter++
-              worker.terminate()
+              // worker.terminate()
             }
             if (items[itemIndex]) {
               worker.postMessage(items[itemIndex])

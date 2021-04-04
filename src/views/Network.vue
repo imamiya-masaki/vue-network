@@ -8,12 +8,12 @@
 <script>
 // @ is an alias to /src
 import ReadFile from '@/components/ReadFile.vue'
-import MainNetwork from '@/components/MainNetwork'
+import Network from '@/components/MainNetwork'
 export default {
   name: 'Network',
   components: {
     ReadFile,
-    MainNetwork
+    MainNetwork: Network
   },
   data: function () {
     return {
