@@ -20,4 +20,8 @@ const lowerToUpperCamel = function (name) {
   }
 }
 
-export { parseCase, lowerToUpperCamel }
+const camelVueCase = function (string) {
+  return lowerToUpperCamel(string.slice(0, string.length - 4))
+}
+
+export { parseCase, lowerToUpperCamel, camelVueCase }

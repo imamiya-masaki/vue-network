@@ -1,5 +1,5 @@
 import parseFunc from 'vue-ast'
-import { parseCase, lowerToUpperCamel } from '@/utility/common.js'
+import { parseCase, lowerToUpperCamel, camelVueCase } from '@/utility/common.js'
 addEventListener('message', e => {
   const res = e.data
   // console.log('res', res)
@@ -13,7 +13,10 @@ addEventListener('message', e => {
   let script = ''
   let userOption = {}
   userOption.absoluteAlias = absoluteAlias
-  console.log('path', path)
+  let nameInPath = path
+  nameInPath.push(name)
+  const absolutePath = nameInPath.join('/')
+  console.log('path', path, name)
   if (data) {
     const templateStart = data.indexOf('<template>') + templateLength
     const templateEnd = data.indexOf('</template>') - templateStart
@@ -25,7 +28,7 @@ addEventListener('message', e => {
   // console.log('templates', templates)
   if (templates) {
     if (templates.length > 0) {
-      postMessage({ data: preNetwork(templates, script, name, path, userOption), name: name })
+      postMessage({ data: preNetwork(templates, script, name, path, userOption), name: name, path: absolutePath })
     } else {
       postMessage({ data: {}, name: name })
     }
@@ -37,7 +40,7 @@ addEventListener('message', e => {
 const preNetwork = function (templates, script, name = '', path = [], userOption = {}, option = { chain: true }, lessDomName = [], onlyDomName = []) {
   // userOptionにより、userが容易にoption,less,onlyの追加ができる
   const registedComponents = moduleLocalComponent(script, name, path, userOption.absoluteAlias)
-  const parsed = astParseNetworkData(parseFunc(templates), option, lessDomName, onlyDomName)
+  const parsed = astParseNetworkData(parseFunc(templates), option, lessDomName, onlyDomName, registedComponents)
   return parsed
 }
 
@@ -105,7 +108,7 @@ const absoluteSourcePath = function (source, path, absoluteAlias) {
   }
   if (variablePath[variablePath.length - 1].match(/.+\.vue/)) {
     // vueファイルだったら...
-    variablePath[variablePath.length - 1] = lowerToUpperCamel(variablePath[variablePath.length - 1].slice(0, variablePath[variablePath.length - 1].length - 4))
+    variablePath[variablePath.length - 1] = camelVueCase(variablePath[variablePath.length - 1])
     console.log('variablePath', variablePath[variablePath.length - 1])
   }
   return variablePath.join('/')
@@ -179,7 +182,7 @@ const funcExportDeclaration = function (ExportDeclaration) {
   return registComponents
 }
 
-const astParseNetworkData = function (domAST, option, lessDomName, onlyDomName) {
+const astParseNetworkData = function (domAST, option, lessDomName, onlyDomName, registedComponents) {
   let lessDomObject = {}
   let onlyDomObject = {}
   let hitDomCount = {}
@@ -191,11 +194,15 @@ const astParseNetworkData = function (domAST, option, lessDomName, onlyDomName) 
   while (targets.length > 0) {
     const que = targets.shift()
     const targetName = parseCase(que.name, option)
+    let setName = targetName
+    if (registedComponents.hasOwnProperty(targetName)) {
+      setName = registedComponents[targetName]
+    }
     if ((onlyDomName.length === 0 || onlyDomObject.hasOwnProperty(targetName)) && !lessDomObject.hasOwnProperty(targetName)) {
-      if (!hitDomCount.hasOwnProperty(targetName)) {
-        hitDomCount[targetName] = 0
+      if (!hitDomCount.hasOwnProperty(setName)) {
+        hitDomCount[setName] = 0
       }
-      hitDomCount[targetName]++
+      hitDomCount[setName]++
     }
     if (que.hasOwnProperty('children')) {
       targets.push(...que.children)

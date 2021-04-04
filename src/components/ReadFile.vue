@@ -18,6 +18,7 @@ export default {
       reader: false,
       output: [],
       outputObject: {},
+      pathToNameObject: {},
       count: 0,
       counter: 0
     }
@@ -64,8 +65,9 @@ export default {
               // 設定?
               const { data } = e
               if (typeof data !== 'string' && data.length !== 0) {
-                this.output.push(data.data)
-                this.outputObject[data.name] = data.data
+                this.output.push(data.path)
+                this.outputObject[data.path] = data.data
+                this.pathToNameObject[data.path] = data.name
               }
               this.counter++
               // worker.terminate()
