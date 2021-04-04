@@ -1,5 +1,5 @@
 import parseFunc from 'vue-ast'
-import { parseCase } from '@/utility/common.js'
+import { parseCase, lowerToUpperCamel } from '@/utility/common.js'
 addEventListener('message', e => {
   const res = e.data
   // console.log('res', res)
@@ -67,7 +67,7 @@ const moduleLocalComponent = function (script, name, path, absoluteAlias) {
       }
     }
   }
-  console.log('ast', name, ast)
+  console.log('rootRegistComponents', rootRegistComponents)
   return rootRegistComponents
 }
 const absoluteSourcePath = function (source, path, absoluteAlias) {
@@ -102,6 +102,11 @@ const absoluteSourcePath = function (source, path, absoluteAlias) {
         console.log('ca', variablePath)
         variablePath.push(target)
     }
+  }
+  if (variablePath[variablePath.length - 1].match(/.+\.vue/)) {
+    // vueファイルだったら...
+    variablePath[variablePath.length - 1] = lowerToUpperCamel(variablePath[variablePath.length - 1].slice(0, variablePath[variablePath.length - 1].length - 4))
+    console.log('variablePath', variablePath[variablePath.length - 1])
   }
   return variablePath.join('/')
 }
