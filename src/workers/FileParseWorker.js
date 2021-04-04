@@ -31,7 +31,7 @@ addEventListener('message', e => {
 
 const preNetwork = function (templates, script, name = '', userOption, option = { chain: true }, lessDomName = [], onlyDomName = []) {
   // userOptionにより、userが容易にoption,less,onlyの追加ができる
-  moduleLocalComponent(script, name)
+  const registedComponents = moduleLocalComponent(script, name)
   const parsed = astParseNetworkData(parseFunc(templates), option, lessDomName, onlyDomName)
   return parsed
 }
@@ -40,9 +40,30 @@ const moduleLocalComponent = function (script, name) {
   // モジュールシステム内のローカル登録
   // importを見る -> 実際に登録されるまで監視する
   const { parse } = require('@babel/parser')
-  console.log('script', script)
   const ast = parse(script, { sourceType: 'module' })
-  console.log('ast', name, ast)
+  let rootRegistImports = {}
+  let rootRegistComponents = {}
+  if (ast.type === 'File' && ast.hasOwnProperty('program') && ast.program.type === 'Program') {
+    const bodys = ast.program.body
+    for (let body of bodys) {
+      switch (body.type) {
+        case 'ImportDeclaration':
+          rootRegistImports = Object.assign(rootRegistImports, funcImportDeclaration(body))
+          break
+        case 'ExportDefaultDeclaration':
+          for (const [key, value] of Object.entries(funcExportDeclaration(body))) {
+            if (rootRegistImports.hasOwnProperty(value)) {
+              rootRegistComponents[key] = rootRegistImports[value]
+            } else {
+              console.log('why is not import?', value)
+            }
+          }
+          break
+      }
+    }
+  }
+  // onsole.log('ast', name, ast)
+  return rootRegistComponents
 }
 
 const funcImportDeclaration = function (ImportDeclaration) {
@@ -53,6 +74,8 @@ const funcImportDeclaration = function (ImportDeclaration) {
     sourceText = ImportDeclaration.source.value || ''
   }
   let specifiers = []
+  let registImports = {}
+  let sameErrNames = {} // ここでエラー処理入れても良いな
   if (ImportDeclaration.hasOwnProperty('specifiers')) {
     for (let specify of ImportDeclaration.specifiers) {
       if (specify.type === 'ImportDefaultSpecifier' || specify.type === 'ImportSpecifier') {
@@ -60,15 +83,20 @@ const funcImportDeclaration = function (ImportDeclaration) {
         // 後々defaultと名前指定で処理変更しても良いかも
         if (specify.local.type === 'Identifier') {
           specifiers.push(specify.local.name)
+          if (registImports.hasOwnProperty(specify.local.name)) {
+            sameErrNames[specify.local.name] = 1
+            console.log('sameErrName', specify.local.name)
+          }
+          registImports[specify.local.name] = sourceText
         }
       }
     }
   }
   console.log('funcImportDeclaration', sourceText, specifiers)
-  return { source: sourceText, specifiers: specifiers }
+  return registImports
 }
 
-const funcExporttDeclaration = function (ExportDeclaration) {
+const funcExportDeclaration = function (ExportDeclaration) {
   // exportの中身
   // ここからcomponents
   let registComponents = {} // keyで登録された名前 valueでimportを参照するための名前
@@ -101,6 +129,8 @@ const funcExporttDeclaration = function (ExportDeclaration) {
       }
     }
   }
+  console.log('funcExporttDeclaration', registComponents)
+  return registComponents
 }
 
 const astParseNetworkData = function (domAST, option, lessDomName, onlyDomName) {
