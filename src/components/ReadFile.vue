@@ -70,7 +70,7 @@ export default {
                 this.pathToNameObject[data.path] = data.name
               }
               this.counter++
-              // worker.terminate()
+              worker.terminate()
             }
             if (items[itemIndex]) {
               worker.postMessage(items[itemIndex])
