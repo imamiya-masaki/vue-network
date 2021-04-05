@@ -16,7 +16,7 @@ addEventListener('message', e => {
   let nameInPath = path
   nameInPath.push(name)
   const absolutePath = nameInPath.join('/')
-  console.log('path', path, name)
+  console.log('path', name, path)
   if (data) {
     const templateStart = data.indexOf('<template>') + templateLength
     const templateEnd = data.indexOf('</template>') - templateStart
@@ -51,6 +51,7 @@ const moduleLocalComponent = function (script, name, path, absoluteAlias) {
   const ast = parse(script, { sourceType: 'module' })
   let rootRegistImports = {}
   let rootRegistComponents = {}
+  console.log('moduleLocalComponent', name, path)
   if (ast.type === 'File' && ast.hasOwnProperty('program') && ast.program.type === 'Program') {
     const bodys = ast.program.body
     for (let body of bodys) {
@@ -70,14 +71,14 @@ const moduleLocalComponent = function (script, name, path, absoluteAlias) {
       }
     }
   }
-  console.log('rootRegistComponents', rootRegistComponents)
+  console.log('rootRegistComponents', rootRegistComponents, name, rootRegistImports)
   return rootRegistComponents
 }
 const absoluteSourcePath = function (source, path, absoluteAlias) {
-  console.log('absoluteAlias', absoluteAlias, source, path)
   let variablePath = path
   let sourceSplit = source.split('/')
   // errorで処理を中断するのか別のリカバリー処理をするのかは別途考える。
+  console.log('absoluteSourcePath', source, path)
   for (let i = 0; i < sourceSplit.length; i++) {
     const target = sourceSplit[i]
     switch (target) {
@@ -102,14 +103,12 @@ const absoluteSourcePath = function (source, path, absoluteAlias) {
         variablePath = []
         break
       default:
-        console.log('ca', variablePath)
         variablePath.push(target)
     }
   }
   if (variablePath[variablePath.length - 1].match(/.+\.vue/)) {
     // vueファイルだったら...
     variablePath[variablePath.length - 1] = camelVueCase(variablePath[variablePath.length - 1])
-    console.log('variablePath', variablePath[variablePath.length - 1])
   }
   return variablePath.join('/')
 }
@@ -140,7 +139,6 @@ const funcImportDeclaration = function (ImportDeclaration, path, absoluteAlias =
       }
     }
   }
-  console.log('funcImportDeclaration', sourceText, specifiers, registImports)
   return registImports
 }
 
@@ -178,7 +176,6 @@ const funcExportDeclaration = function (ExportDeclaration) {
       }
     }
   }
-  console.log('funcExporttDeclaration', registComponents)
   return registComponents
 }
 
@@ -193,6 +190,9 @@ const astParseNetworkData = function (domAST, option, lessDomName, onlyDomName, 
   let targets = [domAST]
   while (targets.length > 0) {
     const que = targets.shift()
+    if (que.hasOwnProperty('string') && que.string) {
+      continue
+    }
     const targetName = parseCase(que.name, option)
     let setName = targetName
     if (registedComponents.hasOwnProperty(targetName)) {
