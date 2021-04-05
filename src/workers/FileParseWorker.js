@@ -16,7 +16,7 @@ addEventListener('message', e => {
   let nameInPath = path
   nameInPath.push(name)
   const absolutePath = nameInPath.join('/')
-  console.log('path', absolutePath)
+  console.log('path', name, path)
   if (data) {
     const templateStart = data.indexOf('<template>') + templateLength
     const templateEnd = data.indexOf('</template>') - templateStart
@@ -51,6 +51,7 @@ const moduleLocalComponent = function (script, name, path, absoluteAlias) {
   const ast = parse(script, { sourceType: 'module' })
   let rootRegistImports = {}
   let rootRegistComponents = {}
+  console.log('moduleLocalComponent', name, path)
   if (ast.type === 'File' && ast.hasOwnProperty('program') && ast.program.type === 'Program') {
     const bodys = ast.program.body
     for (let body of bodys) {
@@ -70,12 +71,14 @@ const moduleLocalComponent = function (script, name, path, absoluteAlias) {
       }
     }
   }
+  console.log('rootRegistComponents', rootRegistComponents, name, rootRegistImports)
   return rootRegistComponents
 }
 const absoluteSourcePath = function (source, path, absoluteAlias) {
   let variablePath = path
   let sourceSplit = source.split('/')
   // errorで処理を中断するのか別のリカバリー処理をするのかは別途考える。
+  console.log('absoluteSourcePath', source, path)
   for (let i = 0; i < sourceSplit.length; i++) {
     const target = sourceSplit[i]
     switch (target) {
