@@ -16,7 +16,7 @@ addEventListener('message', e => {
   let nameInPath = path
   nameInPath.push(name)
   const absolutePath = nameInPath.join('/')
-  console.log('path', path, name)
+  console.log('path', absolutePath)
   if (data) {
     const templateStart = data.indexOf('<template>') + templateLength
     const templateEnd = data.indexOf('</template>') - templateStart
@@ -70,11 +70,9 @@ const moduleLocalComponent = function (script, name, path, absoluteAlias) {
       }
     }
   }
-  console.log('rootRegistComponents', rootRegistComponents)
   return rootRegistComponents
 }
 const absoluteSourcePath = function (source, path, absoluteAlias) {
-  console.log('absoluteAlias', absoluteAlias, source, path)
   let variablePath = path
   let sourceSplit = source.split('/')
   // errorで処理を中断するのか別のリカバリー処理をするのかは別途考える。
@@ -102,14 +100,12 @@ const absoluteSourcePath = function (source, path, absoluteAlias) {
         variablePath = []
         break
       default:
-        console.log('ca', variablePath)
         variablePath.push(target)
     }
   }
   if (variablePath[variablePath.length - 1].match(/.+\.vue/)) {
     // vueファイルだったら...
     variablePath[variablePath.length - 1] = camelVueCase(variablePath[variablePath.length - 1])
-    console.log('variablePath', variablePath[variablePath.length - 1])
   }
   return variablePath.join('/')
 }
@@ -140,7 +136,6 @@ const funcImportDeclaration = function (ImportDeclaration, path, absoluteAlias =
       }
     }
   }
-  console.log('funcImportDeclaration', sourceText, specifiers, registImports)
   return registImports
 }
 
@@ -178,7 +173,6 @@ const funcExportDeclaration = function (ExportDeclaration) {
       }
     }
   }
-  console.log('funcExporttDeclaration', registComponents)
   return registComponents
 }
 
@@ -193,6 +187,9 @@ const astParseNetworkData = function (domAST, option, lessDomName, onlyDomName, 
   let targets = [domAST]
   while (targets.length > 0) {
     const que = targets.shift()
+    if (que.hasOwnProperty('string') && que.string) {
+      continue
+    }
     const targetName = parseCase(que.name, option)
     let setName = targetName
     if (registedComponents.hasOwnProperty(targetName)) {

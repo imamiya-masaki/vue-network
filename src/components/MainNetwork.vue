@@ -35,7 +35,7 @@ export default {
           continue
         }
         nodes[src] = 1
-        for (const [target, value] of Object.entries(datas[src].counter)) {
+        for (const [target, value] of Object.entries(datas[src].counter || {})) {
           if (option.readFileOnly && !option.readFileOnly.hasOwnProperty(target)) {
           // ReadFileOnlyがtrueでReadFileOnlyの中にtargetが入っていなければ
             continue
@@ -56,7 +56,7 @@ export default {
       for (const vertex of vertexs) {
         const node = { data: {} }
         node.data.id = vertex
-        node.data.name = vertex
+        node.data.name = vertex // ここ、ユーザー側で名前の表示にできるようにしたい....
         if (vertexInfos.hasOwnProperty(vertex) && vertexInfos[vertex] && typeof vertexInfos[vertex] === 'object' && !Array.isArray(vertexInfos[vertex])) {
           for (const [key, value] of Object.entries(vertexInfos[vertex] || {})) {
             node.data[key] = value
@@ -79,31 +79,7 @@ export default {
           container: document.getElementById('cy'),
           // boxSelectionEnabled: false,
           // autounselectify: false,
-          style: cytoscape.stylesheet()
-            .selector('core')
-            .css({
-              'width': 100
-            })
-            .selector('node')
-            .css({
-              'height': 80,
-              'width': 80,
-              'background-fit': 'cover',
-              'border-color': '#000',
-              'border-width': 3,
-              'border-opacity': 0.5,
-              'content': 'data(name)',
-              'text-valign': 'center'
-            })
-            .selector('edge')
-            .css({
-              'width': 6,
-              'target-arrow-shape': 'triangle',
-              'line-color': '#ffaaaa',
-              'target-arrow-color': '#ffaaaa',
-              'curve-style': 'bezier',
-              'content': 'data(count)'
-            }),
+          style: this.shapeStyle,
           elements: this.cytoscapeData,
           layout: {
             left: 0,
@@ -118,19 +94,62 @@ export default {
   },
   computed: {
     shapedData () {
-      console.log('loadData', this.loadData)
       if (this.loadData && Object.keys(this.loadData).length > 0) {
         const processedData = this.shapeDatas(this.loadData, this.edgeOption, this.vertexInfos)
         console.log('processData', processedData)
         return processedData
       }
       return {}
+    },
+    shapeStyle () {
+      const styles = []
+      styles.push({
+        selector: 'code',
+        css: {
+          'width': 100
+        }
+      })
+      styles.push({
+        selector: 'node',
+        css: {
+          'height': 80,
+          'width': 80,
+          'background-fit': 'cover',
+          'border-color': '#000',
+          'border-width': 3,
+          'border-opacity': 0.5,
+          'content': 'data(name)',
+          'text-valign': 'center'
+        }
+      })
+      styles.push({
+        selector: 'edge',
+        css: {
+          'width': 6,
+          'target-arrow-shape': 'triangle',
+          'line-color': '#ffaaaa',
+          'target-arrow-color': '#ffaaaa',
+          'curve-style': 'bezier',
+          'content': 'data(count)'
+        }
+      })
+      for (let key of Object.keys(this.loadData || {})) {
+        // fileとして存在しているnodeを特別な表示する
+        let style = {}
+        style.selector = `node[id = "${key}"]`
+        style.css = {
+          'background-color': '#F5A45D'
+        }
+        styles.push(style)
+      }
+      return styles
     }
   },
   watch: {
     counter () {
     },
     loadData () {
+      console.log('loadData', this.loadData)
       const data = this.shapeDatas(this.loadData)
       this.cytoscapeData = data
       console.log('cytoscapeData', data)
