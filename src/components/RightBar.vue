@@ -8,7 +8,7 @@
           in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
         </p>
       </div>
-      <code-view />
+      <code-view :code="sample"/>
     </b-sidebar>
   </div>
 </template>
@@ -30,7 +30,23 @@ export default {
   },
   data () {
     return {
-      visible: false
+      visible: false,
+      sample: `
+      <template>
+  <div class="right_bar">
+    <b-button v-if="buttonVisible" @click="onClick">Toggle Sidebar</b-button>
+    <b-sidebar id="sidebar-right" title="Sidebar"  v-model="visible" right shadow>
+      <div class="px-3 py-2">
+        <p>
+          Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis
+          in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
+        </p>
+      </div>
+      <code-view />
+    </b-sidebar>
+  </div>
+</template>
+`
     }
   },
   methods: {
