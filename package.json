@@ -12,6 +12,8 @@
     "bootstrap-vue": "^2.21.2",
     "core-js": "^3.6.5",
     "cytoscape": "^3.18.1",
+    "highlight.js": "^10.7.2",
+    "highlightjs-line-numbers.js": "^2.8.0",
     "prismjs": "^1.23.0",
     "vue": "^2.6.11",
     "vue-ast": "^0.0.5",
