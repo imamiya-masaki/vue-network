@@ -1,7 +1,7 @@
 <template>
   <div class="right_bar">
     <b-button v-if="buttonVisible" @click="onClick">Toggle Sidebar</b-button>
-    <b-sidebar id="sidebar-right" title="Sidebar"  v-model="visible" right shadow>
+    <b-sidebar id="sidebar-right" title="Sidebar"  v-model="visible" right shadow width="500px">
       <div class="px-3 py-2">
         <p>
           Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis
