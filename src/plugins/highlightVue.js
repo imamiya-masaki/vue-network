@@ -13,7 +13,7 @@ function lineByLineHighilght (language, body, hilightLine) {
   for (let line = 0; line < bodySplit.length; line++) {
     const row = bodySplit[line]
     const result = hljs.highlight(language, row, true, state)
-    let setLineNumber = `<div style="float: left; width: ${maxLength}2px;"><span style="float: right;">${line}:</span></div>`
+    let setLineNumber = `<div style="float: left; width: ${maxLength}7px;"><span style="float: right; padding-right: 5px;">${line}:</span></div>`
     let setLine = `<div class="lineNumber">${setLineNumber}<span class="line-value">${result.value}</span></div>`
     if (result.value.length === 0) {
       setLine = `<div class="lineNumber">${setLineNumber}</div></br>`
@@ -47,15 +47,6 @@ const Component = {
       }
       let result = {}
       return lineByLineHighilght(this.language, this.code)
-      // if (this.autoDetect) {
-      //   result = hljs.highlightAuto(this.code)
-      //   this.detectedLanguage = result.language
-      // } else {
-      //   result = hljs.highlight(this.language, this.code, this.ignoreIllegals)
-      //   this.detectedLanguage = this.language
-      // }
-      // console.log('result', result)
-      // return result.value
     },
     autoDetect () {
       return !this.language || hasValueOrEmptyAttribute(this.autodetect)
@@ -64,8 +55,6 @@ const Component = {
       return true
     }
   },
-  // this avoids needing to use a whole Vue compilation pipeline just
-  // to build Highlight.js
   render (createElement) {
     return createElement('pre', {}, [
       createElement('code', {
@@ -74,7 +63,6 @@ const Component = {
       })
     ])
   }
-  // template: `<pre><code :class="className" v-html="highlighted"></code></pre>`
 }
 
 export default {

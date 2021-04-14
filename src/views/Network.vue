@@ -34,6 +34,7 @@ export default {
 
 <style scoped>
 .main-network__position {
+  text-align: center;
 }
 .network {
 }

@@ -1,14 +1,16 @@
 <template>
   <div class="right_bar">
     <b-button v-if="buttonVisible" @click="onClick">Toggle Sidebar</b-button>
-    <b-sidebar id="sidebar-right" title="Sidebar"  v-model="visible" right shadow width="500px">
-      <div>
-        <p>
-          Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis
-          in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-        </p>
+    <b-sidebar id="sidebar-right"  v-model="visible" right shadow width="400px">
+      <div class="header">
+        <div class="header__title">
+          タイトル
+        </div>
       </div>
+      <div class="code-view">
+      <span class="code-view__title">codeView:</span>
       <code-view :code="sample"/>
+      </div>
     </b-sidebar>
   </div>
 </template>
@@ -56,3 +58,17 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.code-view__title {
+  text-align: left;
+}
+.code-view {
+  display: block;
+}
+.header__title {
+  font-size: 150%;
+  font-weight: 500;
+  text-align: center;
+}
+</style>
