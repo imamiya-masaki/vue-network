@@ -1,7 +1,7 @@
 <template>
   <div class="right_bar">
     <b-button v-if="buttonVisible" @click="onClick">Toggle Sidebar</b-button>
-    <b-sidebar id="sidebar-right"  v-model="visible" right shadow width="400px">
+    <b-sidebar id="sidebar-right"  v-model="visible" right shadow width="600px">
       <div class="header">
         <div class="header__title">
           タイトル
