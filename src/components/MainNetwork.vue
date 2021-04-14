@@ -165,7 +165,7 @@ export default {
  .MainNetwork {
   border: 0.5px solid;
   width: 1000px;
-  height: 500px;
+  height: 700px;
  }
  #cy {
  }
