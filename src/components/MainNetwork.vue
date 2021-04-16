@@ -14,6 +14,9 @@ export default {
     edgeOption: {
     },
     vertexInfos: {
+    },
+    networkRules: {
+      default: () => ({})
     }
   },
   data () {
@@ -50,13 +53,19 @@ export default {
       }
       return { vertexs: nodes, edges: edges }
     },
-    shapeNodes: function (vertexs = [], vertexInfos = {}) {
+    shapeNodes: function (vertexs = [], vertexDatas = {}, vertexInfos = {}) {
       // vertexs はArrayでもらう。vertexInfosはObjectでもらう。
       const nodes = []
       for (const vertex of vertexs) {
         const node = { data: {} }
         node.data.id = vertex
         node.data.name = vertex // ここ、ユーザー側で名前の表示にできるようにしたい....
+        if (vertexDatas.hasOwnProperty(vertex)) {
+          // fileとして存在するコンポーネント
+          if (this.networkRules.hasOwnProperty('nameView') && !!this.networkRules.nameView) {
+            node.data.name = vertexDatas[vertex].name
+          }
+        }
         if (vertexInfos.hasOwnProperty(vertex) && vertexInfos[vertex] && typeof vertexInfos[vertex] === 'object' && !Array.isArray(vertexInfos[vertex])) {
           for (const [key, value] of Object.entries(vertexInfos[vertex] || {})) {
             node.data[key] = value
@@ -70,7 +79,7 @@ export default {
       const output = {}
       const preEdges = this.shapeEdges(datas, edgeOption)
       output.edges = preEdges.edges
-      output.nodes = this.shapeNodes(Object.keys(preEdges.vertexs), vertexInfos)
+      output.nodes = this.shapeNodes(Object.keys(preEdges.vertexs), datas, vertexInfos)
       return output
     },
     setNetwork: function () {

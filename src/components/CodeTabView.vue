@@ -2,7 +2,7 @@
   <div class="CodeView">
     <b-tabs>
       <b-tab v-if="template" title="template" >
-        <template-view :code="template" />
+        <template-view :code="template"/>
       </b-tab>
       <b-tab v-if="javaScript" title="script">
         <java-script-view :code="javaScript"/>
