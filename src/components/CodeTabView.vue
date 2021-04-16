@@ -1,5 +1,5 @@
 <template>
-  <div class="CodeView">
+  <div class="CodeView" v-if="isCode">
     <b-tabs>
       <b-tab :disabled="!template" title="template" >
         <template-view :code="template"/>
@@ -44,6 +44,11 @@ export default {
     }
   },
   computed: {
+    isCode () {
+      console.log('javascript', this.javaScript)
+      console.log('template', this.template)
+      return !!this.javaScript || !!this.template
+    }
   },
   mounted: function () {
   }
