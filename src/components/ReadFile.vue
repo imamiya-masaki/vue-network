@@ -37,8 +37,7 @@ export default {
       // vueファイルはtypeで識別できないので、nameの末尾で判定する
       const fileNameSpl = file.name.split('.')
       const IntermediatePath = file.$path.split('/').slice(1, file.$path.split('/').length - 1)
-      const output = { text: await file.text(), name: fileNameSpl.slice(0, fileNameSpl.length - 1).join('.'), path: IntermediatePath }
-      console.log('output', output, fileNameSpl)
+      const output = { text: await file.text(), name: fileNameSpl.slice(0, fileNameSpl.length - 1).join('.'), path: IntermediatePath, rawPath: file.$path }
       return output
     },
     readFile: function () {
@@ -53,10 +52,10 @@ export default {
           output.push(res)
         }
       }
-      console.log('fileCheck', files, output)
       this.count = output.length
       return Promise.all(output)
         .then(items => {
+          console.log('fileCheck', files, items)
           this.reader = true
           // console.log('ss', items)
           for (let itemIndex in items) {
@@ -67,7 +66,8 @@ export default {
               if (typeof data !== 'string' && data.length !== 0) {
                 this.output.push(data.path)
                 this.outputObject[data.path] = data.data
-                this.pathToNameObject[data.path] = data.name
+                this.outputObject[data.path].name = data.name
+                this.outputObject[data.path].rawPath = data.rawPath
               }
               this.counter++
               worker.terminate()
