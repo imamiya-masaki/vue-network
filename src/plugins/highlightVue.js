@@ -8,6 +8,9 @@ function hasValueOrEmptyAttribute (value) {
 function lineByLineHighilght (language, body, hilightLine) {
   let state = null
   const output = []
+  if (!body) {
+    return ''
+  }
   const bodySplit = body.split('\n')
   let maxLength = String(bodySplit.length).length
   for (let line = 0; line < bodySplit.length; line++) {

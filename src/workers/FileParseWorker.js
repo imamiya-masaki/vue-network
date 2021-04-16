@@ -6,6 +6,7 @@ addEventListener('message', e => {
   const data = res.text
   const name = res.name
   const path = res.path
+  const rawPath = res.rawPath
   const templateLength = '<template>'.length
   const scriptLength = '<script>'.length
   const absoluteAlias = '@' // これ後々ユーザーが選べるもしくは、設定ファイルから読み取れるようにしたい。
@@ -16,7 +17,7 @@ addEventListener('message', e => {
   let nameInPath = path
   nameInPath.push(name)
   const absolutePath = nameInPath.join('/')
-  console.log('path', name, path)
+  console.log('≈', name, path)
   if (data) {
     const templateStart = data.indexOf('<template>') + templateLength
     const templateEnd = data.indexOf('</template>') - templateStart
@@ -28,7 +29,16 @@ addEventListener('message', e => {
   // console.log('templates', templates)
   if (templates) {
     if (templates.length > 0) {
-      postMessage({ data: preNetwork(templates, script, name, path, userOption), name: name, path: absolutePath })
+      postMessage(
+        {
+          data: preNetwork(templates, script, name, path, userOption),
+          name: name,
+          path: absolutePath,
+          rawPath: rawPath,
+          rawTemplate: templates,
+          rawScript: script
+        }
+      )
     } else {
       postMessage({ data: {}, name: name })
     }
