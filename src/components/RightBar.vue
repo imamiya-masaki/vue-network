@@ -8,7 +8,7 @@
         </div>
       </div>
       <div class="code-view">
-      <span class="code-view__title">codeView:</span>
+      <span class="code-view__title"></span>
       <code-tab-view :template="sample"/>
       </div>
     </b-sidebar>

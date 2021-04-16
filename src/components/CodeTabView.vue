@@ -1,10 +1,10 @@
 <template>
   <div class="CodeView">
     <b-tabs>
-      <b-tab v-if="template" title="template" >
+      <b-tab :disabled="!template" title="template" >
         <template-view :code="template"/>
       </b-tab>
-      <b-tab v-if="javaScript" title="script">
+      <b-tab :disabled="!javaScript" title="script">
         <java-script-view :code="javaScript"/>
       </b-tab>
     </b-tabs>

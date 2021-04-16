@@ -96,6 +96,17 @@ export default {
           }
         }
       )
+      const self = this
+      this.cy.on('tap', 'node', function (event) {
+        const node = event.target
+        if (self.loadData.hasOwnProperty(node.id())) {
+          self.$emit('nodeTap', node.id())
+        }
+      })
+      this.cy.on('tap', 'edge', function (event) {
+        const edge = event.target
+        self.$emit('edgeTap', { source: edge.source().id(), target: edge.target().id() })
+      })
       // なぜか画面が半分になってしまうので致し方ない処理...
       const canvas = document.querySelector('canvas[data-id="layer2-node"]')
       canvas.style.position = 'relative'
