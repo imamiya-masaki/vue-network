@@ -9,7 +9,7 @@
       </div>
       <div class="code-view">
       <span class="code-view__title">codeView:</span>
-      <code-view :code="sample"/>
+      <code-tab-view :template="sample"/>
       </div>
     </b-sidebar>
   </div>
@@ -17,12 +17,12 @@
 
 <script>
 // @ is an alias to /src
-import CodeView from '@/components/CodeView'
+import CodeTabView from '@/components/CodeTabView'
 
 export default {
   name: 'Home',
   components: {
-    CodeView
+    CodeTabView
   },
   props: {
     buttonVisible: {
