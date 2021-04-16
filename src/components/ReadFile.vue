@@ -65,9 +65,13 @@ export default {
               const { data } = e
               if (typeof data !== 'string' && data.length !== 0) {
                 this.output.push(data.path)
-                this.outputObject[data.path] = data.data
-                this.outputObject[data.path].name = data.name
-                this.outputObject[data.path].rawPath = data.rawPath
+                this.outputObject[data.path] = {
+                  ...data.data,
+                  name: data.name,
+                  rawPath: data.rawPath,
+                  template: data.rawTemplate,
+                  script: data.rawScript
+                }
               }
               this.counter++
               worker.terminate()

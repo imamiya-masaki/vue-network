@@ -29,7 +29,16 @@ addEventListener('message', e => {
   // console.log('templates', templates)
   if (templates) {
     if (templates.length > 0) {
-      postMessage({ data: preNetwork(templates, script, name, path, userOption), name: name, path: absolutePath, rawPath: rawPath })
+      postMessage(
+        {
+          data: preNetwork(templates, script, name, path, userOption),
+          name: name,
+          path: absolutePath,
+          rawPath: rawPath,
+          rawTemplate: templates,
+          rawScript: script
+        }
+      )
     } else {
       postMessage({ data: {}, name: name })
     }
