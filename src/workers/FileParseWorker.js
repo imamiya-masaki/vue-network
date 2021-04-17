@@ -193,6 +193,7 @@ const astParseNetworkData = function (domAST, option, lessDomName, onlyDomName, 
   let lessDomObject = {}
   let onlyDomObject = {}
   let hitDomCount = {}
+  let hitDomHilightLine = {}
   for (let key of Object.keys(lessDomName)) {
     lessDomObject[parseCase(key, option)] = true
     onlyDomObject[parseCase(key, option)] = true
@@ -211,13 +212,22 @@ const astParseNetworkData = function (domAST, option, lessDomName, onlyDomName, 
     if ((onlyDomName.length === 0 || onlyDomObject.hasOwnProperty(targetName)) && !lessDomObject.hasOwnProperty(targetName)) {
       if (!hitDomCount.hasOwnProperty(setName)) {
         hitDomCount[setName] = 0
+        hitDomHilightLine[setName] = []
       }
+      const line = {}
+      if (que.hasOwnProperty('startLine')) {
+        line.start = que.startLine
+      }
+      if (que.hasOwnProperty('endLine')) {
+        line.end = que.endLine
+      }
+      hitDomHilightLine[setName].push(line)
       hitDomCount[setName]++
     }
     if (que.hasOwnProperty('children')) {
       targets.push(...que.children)
     }
   }
-  return { counter: hitDomCount, pure: domAST }
+  return { counter: hitDomCount, pure: domAST, hilightLine: hitDomHilightLine }
 }
 export default {}

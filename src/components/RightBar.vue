@@ -86,6 +86,8 @@ export default {
           script = node.script
         }
       } else if (targetCode.type === 'edge') {
+        const edge = targetCode.edge
+        console.log('edge', edge, targetCode)
       }
       let output = { 'template': template, 'script': script }
       return output

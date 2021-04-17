@@ -48,7 +48,7 @@ export default {
     catchEdgeTap: function (edge) {
       let targetCode = {}
       targetCode.type = 'edge'
-      targetCode.node = edge
+      targetCode.edge = edge
       this.targetCode = targetCode
       this.$refs.rightBar.visible = true
     }
