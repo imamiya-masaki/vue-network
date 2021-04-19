@@ -48,8 +48,8 @@ export default {
   },
   computed: {
     isCode () {
-      console.log('javascript', this.javaScript)
-      console.log('template', this.template)
+      // console.log('javascript', this.javaScript)
+      // console.log('template', this.template)
       return !!this.javaScript || !!this.template
     }
   },

@@ -98,14 +98,20 @@ export default {
         }
         if (target.name && source.hasOwnProperty('hilightLine')) {
           let targetLines = [...source.hilightLine[target.name]]
+          console.log('targetLines', targetLines, source.hilightLine[target.name])
           for (let line of targetLines) {
-            let end = -1
+            let startDom = 0
+            let end
             if (line.hasOwnProperty('end')) {
-              end = line.end
+              end = line.endLine.end
             } else {
-              end = line.start
+              end = line.startLine.end
             }
-            templateHilightLines[line.start] = end
+            startDom = line.startLine.start // 開始タグの最初の行を取得
+            templateHilightLines[startDom] = {
+              end: end,
+              value: line
+            } // endは閉じタグ or 開始タグの最後の行を取得
           }
         }
         console.log('edge', edge, targetCode, templateHilightLines)

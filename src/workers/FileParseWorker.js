@@ -216,10 +216,10 @@ const astParseNetworkData = function (domAST, option, lessDomName, onlyDomName, 
       }
       const line = {}
       if (que.hasOwnProperty('startLine')) {
-        line.start = que.startLine
+        line.startLine = que.startLine
       }
       if (que.hasOwnProperty('endLine')) {
-        line.end = que.endLine
+        line.endLine = que.endLine
       }
       hitDomHilightLine[setName].push(line)
       hitDomCount[setName]++
