@@ -75,6 +75,7 @@ export default {
       let targetCode = this.targetCode
       let template = ''
       let script = ''
+      let templateHilightLines = {}
       // これここでtypeで分けるのが良い形なのか不明なので後々帰るかも...
       if (targetCode.type === 'node') {
         const node = targetCode.node
@@ -87,9 +88,29 @@ export default {
         }
       } else if (targetCode.type === 'edge') {
         const edge = targetCode.edge
-        console.log('edge', edge, targetCode)
+        const source = targetCode.edge.source
+        const target = targetCode.edge.target
+        if (source.template) {
+          template = source.template
+        }
+        if (source.script) {
+          script = source.script
+        }
+        if (target.name && source.hasOwnProperty('hilightLine')) {
+          let targetLines = [...source.hilightLine[target.name]]
+          for (let line of targetLines) {
+            let end = -1
+            if (line.hasOwnProperty('end')) {
+              end = line.end
+            } else {
+              end = line.start
+            }
+            templateHilightLines[line.start] = end
+          }
+        }
+        console.log('edge', edge, targetCode, templateHilightLines)
       }
-      let output = { 'template': template, 'script': script }
+      let output = { 'template': template, 'script': script, 'templateLineHilight': templateHilightLines }
       return output
     },
     itemInfo () {
