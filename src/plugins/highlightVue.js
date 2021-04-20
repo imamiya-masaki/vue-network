@@ -17,8 +17,33 @@ function lineByLineHighilght (language, body, hilightLine = {}) {
   let closeMainHilight = {}
   let closeSubHilight = {}
   let hilightStyle = {}
+  let maxViewLength = 0
+  let resultViewLength = 600
+  for (const row of bodySplit) {
+    // 一番長い列の表示サイズが欲しい
+    // もっといい方法ありそう...
+    let length = 0
+    for (let i = 0; i < row.length; i++) {
+      let c = row.charCodeAt(i)
+      if ((c >= 0x0 && c < 0x81) || (c === 0xf8f0) || (c >= 0xff61 && c < 0xffa0) || (c >= 0xf8f1 && c < 0xf8f4)) {
+        length += 1
+      } else {
+        length += 2
+      }
+    }
+    if (length > maxViewLength) {
+      maxViewLength = length
+    }
+  }
+  if (resultViewLength < Math.ceil(maxViewLength * 8.65)) {
+    resultViewLength = Math.ceil(maxViewLength * 8.65)
+  }
   for (let line = 0; line < bodySplit.length; line++) {
     hilightStyle = {}
+    const row = bodySplit[line]
+    const result = hljs.highlight(language, row, true, state)
+    let size = resultViewLength
+    console.log('result', result, resultViewLength)
     if (hilightLine.hasOwnProperty(line)) {
       // hilightLineをcloseに展開する。
       const mainLines = hilightLine[line].value
@@ -36,22 +61,20 @@ function lineByLineHighilght (language, body, hilightLine = {}) {
     }
     if (Object.keys(closeMainHilight).length > 0) {
       hilightStyle['background-color'] = '#ffd700' // yellow
-      hilightStyle.width = 'max-content'
+      hilightStyle.width = `${size}px`
+      hilightStyle.height = '21px'
     } else if (Object.keys(closeSubHilight).length > 0) {
       hilightStyle['background-color'] = '#fffacd'
-      hilightStyle.width = 'max-content'
+      hilightStyle.width = `${size}px`
+      hilightStyle.height = '21px'
     }
-    // max-contentはIE未対応だから、もし対応するんだったら、
-    // IEの場合100vhにする等を考える必要がある。
     let HilightStyleSlice = []
     for (const [key, value] of Object.entries(hilightStyle)) {
       // 後々hilight時にstyleを適用するかもしれないので汎用的に
       HilightStyleSlice.push(`${key}: ${value};`)
     }
-    const row = bodySplit[line]
-    const result = hljs.highlight(language, row, true, state)
     let setLineNumber = `<div style="float: left; width: ${maxLength}7px;"><span style="float: right; padding-right: 5px;">${line}:</span></div>`
-    let setLine = `<div class="lineNumber" style="${HilightStyleSlice.join(' ')}">${setLineNumber}<span class="line-value">${result.value}</span></div>`
+    let setLine = `<div class="lineNumber" style="${HilightStyleSlice.join(' ')}">${setLineNumber}<span class="line-value" >${result.value}</span></div>`
     if (result.value.length === 0) {
       setLine = `<div class="lineNumber">${setLineNumber}</div></br>`
     }
@@ -70,7 +93,7 @@ function lineByLineHighilght (language, body, hilightLine = {}) {
 }
 
 const Component = {
-  props: ['language', 'code', 'autodetect', 'highlightLines'],
+  props: ['language', 'code', 'highlightLines', 'lineSize'],
   data: function () {
     return {
       detectedLanguage: '',
@@ -89,16 +112,9 @@ const Component = {
     },
     highlighted () {
       // autoDetect禁止にするか...
-      if (!this.autoDetect && !hljs.getLanguage(this.language)) {
-        console.warn(`The language "${this.language}" you specified could not be found.`)
-        this.unknownLanguage = true
-        return escapeHTML(this.code)
-      }
+      // autoDetect使いたい場合はgithubのhilight.js参照
       let result = {}
       return lineByLineHighilght(this.language, this.code, this.highlightLines)
-    },
-    autoDetect () {
-      return !this.language || hasValueOrEmptyAttribute(this.autodetect)
     },
     ignoreIllegals () {
       return true
