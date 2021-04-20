@@ -69,7 +69,8 @@ export default {
                   name: data.name,
                   rawPath: data.rawPath,
                   template: data.rawTemplate,
-                  script: data.rawScript
+                  script: data.rawScript,
+                  path: data.path
                 }
               }
               this.counter++

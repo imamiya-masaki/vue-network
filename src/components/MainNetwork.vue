@@ -102,6 +102,7 @@ export default {
         let output = {}
         if (nodeData.hasOwnProperty('name')) {
           output.name = nodeData.name
+          output.path = nodeData.id
         }
         return output
       }

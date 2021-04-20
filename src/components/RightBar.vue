@@ -36,7 +36,7 @@ export default {
       type: Boolean
     },
     targetCode: {
-      default: () => ({ type: '' }),
+      default: () => ({}),
       type: Object
     }
   },
@@ -68,6 +68,9 @@ export default {
   },
   computed: {
     viewCode () {
+      // TODO: これさぁ...凝集度考えらたら、ここで合ってるのか...?
+      // これ使うのtabViewだし、さらに言うと渡された一つのノードのみで完結するoutput...
+      // tabViewに移すかnode単体のデータだからMainNetworkに移すか...?
       if (!this.targetCode) {
         console.error('why targetCode undified or null ?')
         return {}
@@ -95,8 +98,9 @@ export default {
         if (source.script) {
           script = source.script
         }
-        if (target.name && source.hasOwnProperty('hilightLine')) {
-          let targetLines = [...source.hilightLine[target.name]]
+        if (target.path && source.hasOwnProperty('hilightLine')) {
+          console.log('targetLines', source.hilightLine, target.path, target)
+          let targetLines = [...source.hilightLine[target.path]]
           for (let line of targetLines) {
             let startDom = 0
             let end

@@ -24,9 +24,8 @@ function lineByLineHighilght (language, body, hilightLine = {}) {
       const mainLines = hilightLine[line].value
       closeSubHilight[hilightLine[line].end] = line
       for (let mainLine of Object.values(mainLines)) {
-        // domの情報が来るはずなので、start,endで同一な数が複数個こないことが前提
+        // domの情報が来るはずなので、start,endで同一な数が複数個来る場合は、同一行で完結しているモノ
         if (mainHilight.hasOwnProperty(mainLine.start)) {
-          console.error('why is multiple identical number there?')
         }
         mainHilight[mainLine.start] = mainLine.end
       }
@@ -37,12 +36,13 @@ function lineByLineHighilght (language, body, hilightLine = {}) {
     }
     if (Object.keys(closeMainHilight).length > 0) {
       hilightStyle['background-color'] = '#ffd700' // yellow
-      hilightStyle.width = '100vh'
+      hilightStyle.width = 'max-content'
     } else if (Object.keys(closeSubHilight).length > 0) {
       hilightStyle['background-color'] = '#fffacd'
-      hilightStyle.width = '100vh'
+      hilightStyle.width = 'max-content'
     }
-
+    // max-contentはIE未対応だから、もし対応するんだったら、
+    // IEの場合100vhにする等を考える必要がある。
     let HilightStyleSlice = []
     for (const [key, value] of Object.entries(hilightStyle)) {
       // 後々hilight時にstyleを適用するかもしれないので汎用的に
