@@ -17,7 +17,6 @@ addEventListener('message', e => {
   let nameInPath = path
   nameInPath.push(name)
   const absolutePath = nameInPath.join('/')
-  console.log('≈', name, path)
   if (data) {
     const templateStart = data.indexOf('<template>') + templateLength
     const templateEnd = data.indexOf('</template>') - templateStart
@@ -74,21 +73,19 @@ const moduleLocalComponent = function (script, name, path, absoluteAlias) {
             if (rootRegistImports.hasOwnProperty(value)) {
               rootRegistComponents[key] = rootRegistImports[value]
             } else {
-              console.log('why is not import?', value)
+              console.error('why is not import?', value)
             }
           }
           break
       }
     }
   }
-  console.log('rootRegistComponents', rootRegistComponents, name, rootRegistImports)
   return rootRegistComponents
 }
 const absoluteSourcePath = function (source, path, absoluteAlias) {
   let variablePath = path
   let sourceSplit = source.split('/')
   // errorで処理を中断するのか別のリカバリー処理をするのかは別途考える。
-  console.log('absoluteSourcePath', source, path)
   for (let i = 0; i < sourceSplit.length; i++) {
     const target = sourceSplit[i]
     switch (target) {

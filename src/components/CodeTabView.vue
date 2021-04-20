@@ -5,7 +5,7 @@
         :disabled="!template"
         title="template"
       >
-        <template-view :code="template"/>
+        <template-view :code="template" :hilightLines="templateHilightLines" />
       </b-tab>
       <b-tab :disabled="!javaScript" title="script">
         <java-script-view :code="javaScript"/>
@@ -20,7 +20,7 @@ import TemplateView from '@/components/TemplateView'
 import JavaScriptView from '@/components/JavaScriptView'
 
 export default {
-  name: 'CodeView',
+  name: 'CodeTabView',
   components: {
     TemplateView,
     JavaScriptView
@@ -33,6 +33,10 @@ export default {
     template: {
       default: null,
       type: String
+    },
+    templateHilightLines: {
+      default: () => ({}),
+      type: Object
     }
   },
   data () {
@@ -54,6 +58,10 @@ export default {
     }
   },
   mounted: function () {
+  },
+  watch: {
+    templateHilightLines: function (value) {
+    }
   }
 }
 </script>

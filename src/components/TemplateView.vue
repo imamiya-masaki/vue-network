@@ -1,6 +1,6 @@
 <template>
   <div class="CodeView">
-    <highlightjs language="HTML" :code="code" class="highlightCode"/>
+    <highlightjs language="HTML" :code="code" class="highlightCode" :highlightLines="hilightLines" />
   </div>
 </template>
 
@@ -16,6 +16,10 @@ export default {
     code: {
       default: '',
       type: String
+    },
+    hilightLines: {
+      type: Object,
+      default: () => ({})
     }
   },
   data () {
@@ -32,6 +36,10 @@ export default {
   computed: {
   },
   mounted: function () {
+  },
+  watch: {
+    hilightLines: function (value) {
+    }
   }
 }
 </script>

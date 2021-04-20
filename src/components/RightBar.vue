@@ -4,7 +4,7 @@
     <b-sidebar id="sidebar-right"  v-model="visible" right shadow width="600px">
       <div class="code-view">
       <span class="code-view__title"></span>
-      <code-tab-view :template="viewCode.template" :javaScript="viewCode.script"/>
+      <code-tab-view :template="viewCode.template" :javaScript="viewCode.script" :templateHilightLines="viewCode.templateHilightLines" />
       </div>
       <div class="detail">
         <div class="detail__title">
@@ -69,7 +69,7 @@ export default {
   computed: {
     viewCode () {
       if (!this.targetCode) {
-        console.log('why targetCode undified or null ?')
+        console.error('why targetCode undified or null ?')
         return {}
       }
       let targetCode = this.targetCode
@@ -79,7 +79,6 @@ export default {
       // これここでtypeで分けるのが良い形なのか不明なので後々帰るかも...
       if (targetCode.type === 'node') {
         const node = targetCode.node
-        console.log('node', node)
         if (node.template) {
           template = node.template
         }
@@ -98,11 +97,10 @@ export default {
         }
         if (target.name && source.hasOwnProperty('hilightLine')) {
           let targetLines = [...source.hilightLine[target.name]]
-          console.log('targetLines', targetLines, source.hilightLine[target.name])
           for (let line of targetLines) {
             let startDom = 0
             let end
-            if (line.hasOwnProperty('end')) {
+            if (line.hasOwnProperty('endLine')) {
               end = line.endLine.end
             } else {
               end = line.startLine.end
@@ -114,9 +112,8 @@ export default {
             } // endは閉じタグ or 開始タグの最後の行を取得
           }
         }
-        console.log('edge', edge, targetCode, templateHilightLines)
       }
-      let output = { 'template': template, 'script': script, 'templateLineHilight': templateHilightLines }
+      let output = { 'template': template, 'script': script, 'templateHilightLines': templateHilightLines }
       return output
     },
     itemInfo () {
