@@ -55,7 +55,6 @@ export default {
       this.count = output.length
       return Promise.all(output)
         .then(items => {
-          console.log('fileCheck', files, items)
           this.reader = true
           // console.log('ss', items)
           for (let itemIndex in items) {
@@ -70,7 +69,8 @@ export default {
                   name: data.name,
                   rawPath: data.rawPath,
                   template: data.rawTemplate,
-                  script: data.rawScript
+                  script: data.rawScript,
+                  path: data.path
                 }
               }
               this.counter++
@@ -88,7 +88,6 @@ export default {
       worker.onmessage = e => {
         // 設定?
         const { data } = e
-        console.log('data', data)
         worker.terminate()
       }
       worker.postMessage(100)

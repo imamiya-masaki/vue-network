@@ -35,10 +35,8 @@ export default {
   methods: {
     extractReadFile: function (data) {
       this.readFileData = data
-      console.log('extract', data)
     },
     catchNodeTap: function (node) {
-      console.log('node', node)
       let targetCode = {}
       targetCode.type = 'node'
       targetCode.node = node
@@ -48,7 +46,7 @@ export default {
     catchEdgeTap: function (edge) {
       let targetCode = {}
       targetCode.type = 'edge'
-      targetCode.node = edge
+      targetCode.edge = edge
       this.targetCode = targetCode
       this.$refs.rightBar.visible = true
     }

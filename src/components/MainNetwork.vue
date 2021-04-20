@@ -97,15 +97,36 @@ export default {
         }
       )
       const self = this
-      this.cy.on('tap', 'node', function (event) {
-        const node = event.target
-        if (self.loadData.hasOwnProperty(node.id())) {
-          self.$emit('nodeTap', self.loadData[node.id()])
+      const isNotFileItem = function (nodeData) {
+        // loadDataに存在しない場合(dom)に、使いやすいように、加工する
+        let output = {}
+        if (nodeData.hasOwnProperty('name')) {
+          output.name = nodeData.name
+          output.path = nodeData.id
         }
+        return output
+      }
+      this.cy.on('tap', 'node', function (event) {
+        let node = event.target
+        let outputNode = {}
+        if (self.loadData.hasOwnProperty(node.id())) {
+          outputNode = self.loadData[node.id()]
+        } else {
+          outputNode = isNotFileItem(node.data())
+        }
+        self.$emit('nodeTap', outputNode)
       })
       this.cy.on('tap', 'edge', function (event) {
         const edge = event.target
-        self.$emit('edgeTap', { source: self.loadData[edge.source().id()], target: self.loadData[edge.target().id()] })
+        let source = self.loadData[edge.source().id()]
+        let target = self.loadData[edge.target().id()]
+        if (!source) {
+          source = isNotFileItem(edge.source().data())
+        }
+        if (!target) {
+          target = isNotFileItem(edge.target().data())
+        }
+        self.$emit('edgeTap', { source: source, target: target })
       })
       // なぜか画面が半分になってしまうので致し方ない処理...
       const canvas = document.querySelector('canvas[data-id="layer2-node"]')

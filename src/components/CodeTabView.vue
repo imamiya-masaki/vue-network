@@ -1,8 +1,11 @@
 <template>
   <div class="CodeView" v-if="isCode">
     <b-tabs>
-      <b-tab :disabled="!template" title="template" >
-        <template-view :code="template"/>
+      <b-tab
+        :disabled="!template"
+        title="template"
+      >
+        <template-view :code="template" :hilightLines="templateHilightLines" />
       </b-tab>
       <b-tab :disabled="!javaScript" title="script">
         <java-script-view :code="javaScript"/>
@@ -17,7 +20,7 @@ import TemplateView from '@/components/TemplateView'
 import JavaScriptView from '@/components/JavaScriptView'
 
 export default {
-  name: 'CodeView',
+  name: 'CodeTabView',
   components: {
     TemplateView,
     JavaScriptView
@@ -30,6 +33,10 @@ export default {
     template: {
       default: null,
       type: String
+    },
+    templateHilightLines: {
+      default: () => ({}),
+      type: Object
     }
   },
   data () {
@@ -45,12 +52,16 @@ export default {
   },
   computed: {
     isCode () {
-      console.log('javascript', this.javaScript)
-      console.log('template', this.template)
+      // console.log('javascript', this.javaScript)
+      // console.log('template', this.template)
       return !!this.javaScript || !!this.template
     }
   },
   mounted: function () {
+  },
+  watch: {
+    templateHilightLines: function (value) {
+    }
   }
 }
 </script>
