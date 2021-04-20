@@ -22,6 +22,8 @@ function lineByLineHighilght (language, body, hilightLine = {}) {
   for (const row of bodySplit) {
     // 一番長い列の表示サイズが欲しい
     // もっといい方法ありそう...
+    // 例えばlengthで求めて、全角サイズのものは正規表現でmatch -> lengthでいい感じに求める
+    // 等した場合ってどっちが速いんやろ...記事書きたい
     let length = 0
     for (let i = 0; i < row.length; i++) {
       let c = row.charCodeAt(i)
