@@ -49,9 +49,10 @@ describe('CodeTabView', () => {
   // }
   // `
   it('b-tab check', () => {
-    const bTab = wrapper.findAll('b-tab').at(0)
+    const wrapper = mount(CodeTabView)
+    // const bTab = wrapper.findAll('div').at(0)
     console.log('wrapper', wrapper)
-    expect(bTab.is('b-tab')).toBe(true)
+    expect(wrapper.is(CodeTabView)).toBe(true)
 
   })
 })
