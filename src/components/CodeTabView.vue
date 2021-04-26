@@ -15,7 +15,6 @@
 </template>
 
 <script>
-import Vue from 'vue'
 import TemplateView from '@/components/TemplateView'
 import JavaScriptView from '@/components/JavaScriptView'
 

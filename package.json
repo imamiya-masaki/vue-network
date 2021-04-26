@@ -9,7 +9,9 @@
     "test": "jest"
   },
   "dependencies": {
+    "@babel/core": "^7.13.16",
     "@babel/parser": "^7.12.17",
+    "babel-preset-env": "^1.7.0",
     "bootstrap-vue": "^2.21.2",
     "core-js": "^3.6.5",
     "cytoscape": "^3.18.1",
@@ -37,8 +39,10 @@
     "@vue/cli-service": "~4.5.11",
     "@vue/eslint-config-standard": "^5.1.2",
     "@vue/test-utils": "^1.1.4",
+    "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^10.1.0",
     "babel-jest": "^26.6.3",
+    "babel-preset-vue": "^2.0.2",
     "bootstrap": "^4.5.2",
     "eslint": "^6.7.2",
     "eslint-plugin-import": "^2.20.2",
@@ -84,15 +88,9 @@
   "jest": {
     "moduleFileExtensions": [
       "js",
-      "json",
       "vue"
     ],
-    "moduleNameMapper": {
-      "^@/(.*)$": "<rootDir>/src/$1"
-    },
-    "transformIgnorePatterns": [
-      "node_modules/(?!vue-awesome|vuex-i18n)"
-    ],
+    "moduleNameMapper": {},
     "transform": {
       ".*\\.(vue)$": "<rootDir>/node_modules/vue-jest",
       "^.+\\.js$": "<rootDir>/node_modules/babel-jest"
